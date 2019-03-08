@@ -1,0 +1,24 @@
+=== /cards
+
+TODO General documentation for cards.
+
+==== Sample
+===== CURL
+include::{snippets}/cards/curl-request.adoc[]
+
+===== HTTP Request
+include::{snippets}/cards/http-request.adoc[]
+
+===== HTTP Response
+include::{snippets}/cards/http-response.adoc[]
+
+==== Parameters
+===== Request
+include::{snippets}/cards/request-parameters.adoc[]
+
+==== Response
+===== Body
+include::{snippets}/cards/response-body.adoc[]
+
+===== Fields
+include::{snippets}/cards/response-fields.adoc[]

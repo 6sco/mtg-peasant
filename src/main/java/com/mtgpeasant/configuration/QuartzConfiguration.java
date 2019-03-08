@@ -11,13 +11,13 @@ import static org.quartz.DateBuilder.futureDate;
 @Configuration
 public class QuartzConfiguration {
 
-    @Value("${gather.repeat.interval:86400}")
-    private Integer gatherRepeatIntervalInSecond;
+    @Value("${gather.repeat.interval:1}")
+    private Integer gatherRepeatIntervalInWeek;
 
     @Value("${trigger.at.boot.name}")
     private String triggerAtBootName;
 
-    @Value("${trigger.every.day.name}")
+    @Value("${trigger.every.week.name}")
     private String triggerEveryDayName;
 
     @Bean
@@ -38,10 +38,10 @@ public class QuartzConfiguration {
     public Trigger gatherCardJobTriggerEveryDay(JobDetail gatherCardJob) {
 
         SimpleScheduleBuilder scheduleBuilder = SimpleScheduleBuilder.simpleSchedule()
-                .withIntervalInSeconds(gatherRepeatIntervalInSecond).repeatForever();
+                .withIntervalInHours(gatherRepeatIntervalInWeek * 7 * 24).repeatForever();
 
         return TriggerBuilder.newTrigger().forJob(gatherCardJob)
-                .withIdentity(triggerEveryDayName).startAt(futureDate(gatherRepeatIntervalInSecond, DateBuilder
-                        .IntervalUnit.SECOND)).withSchedule(scheduleBuilder).build();
+                .withIdentity(triggerEveryDayName).startAt(futureDate(gatherRepeatIntervalInWeek, DateBuilder
+                        .IntervalUnit.WEEK)).withSchedule(scheduleBuilder).build();
     }
 }

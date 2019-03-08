@@ -1,11 +1,11 @@
 package com.mtgpeasant.card;
 
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.lang.NonNull;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.stereotype.Component;
 
@@ -17,15 +17,18 @@ public class CardGatherJob extends QuartzJobBean {
     @Value("${trigger.at.boot.name}")
     private String triggerAtBootName;
 
-    private CardService gatherService;
+    private CardClient cardClient;
+
+    private CardRepository cardRepository;
 
     @Autowired
-    public CardGatherJob(CardService gatherService) {
-        this.gatherService = gatherService;
+    public CardGatherJob(CardClient cardClient, CardRepository cardRepository) {
+        this.cardRepository = cardRepository;
+        this.cardClient = cardClient;
     }
 
     @Override
-    protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
+    protected void executeInternal(@NonNull JobExecutionContext context) {
 
         LOGGER.debug("[executeInternal] called.");
 
@@ -33,16 +36,16 @@ public class CardGatherJob extends QuartzJobBean {
         if (context.getTrigger().getKey().getName().equals(triggerAtBootName)) {
 
             // Boot trigger, gather cards only if no cards are found in repository.
-            Long countCards = gatherService.countCards();
+            Long countCards = cardRepository.count();
             LOGGER.debug("[executeInternal] countCards {}", countCards);
 
             if (countCards.equals(0L)) {
-                gatherService.gatherCards();
+                cardClient.gatherCards();
             }
 
         } else {
-            // Every day trigger, gather cards.
-            gatherService.gatherCards();
+            // Every week trigger, gather cards.
+            cardClient.gatherCards();
         }
     }
 }

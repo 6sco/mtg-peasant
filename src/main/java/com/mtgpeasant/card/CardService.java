@@ -1,14 +1,20 @@
 package com.mtgpeasant.card;
 
-import com.mtgpeasant.card.model.Card;
+import com.mtgpeasant.card.Exception.CardNotFoundException;
+import com.mtgpeasant.card.model.Lang;
+import com.mtgpeasant.card.model.Rarity;
+import com.mtgpeasant.card.model.magicthegatheringIo.Card;
+import com.mtgpeasant.card.model.magicthegatheringIo.ForeignNames;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
-import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,69 +25,84 @@ public class CardService {
 
     private CardRepository cardRepository;
 
-    private CardClient cardClient;
+    private ForeignNamesRepository foreignNamesRepository;
+
+    private MongoTemplate mongoTemplate;
 
     @Autowired
-    public CardService(CardRepository cardRepository, CardClient cardClient) {
+    public CardService(CardRepository cardRepository, ForeignNamesRepository foreignNamesRepository, MongoTemplate mongoTemplate) {
         this.cardRepository = cardRepository;
-        this.cardClient = cardClient;
+        this.foreignNamesRepository = foreignNamesRepository;
+        this.mongoTemplate = mongoTemplate;
     }
 
-    /**
-     * Gather all cards and save them to repository.
-     */
-    void gatherCards() {
+    public List<Card> getCards(Integer page, Integer size, String name, String set) {
 
-        LOGGER.debug("[gatherCards] called.");
+        LOGGER.debug("[getCards] page {}, size {}, name {}, set {}.", page, size, name, set);
 
-        List<Card> cards = cardClient.getCards();
+        Query query = new Query();
 
-        LOGGER.debug("[gatherCards] get {}.", cards.size());
+        // Default page 0, default size 100.
+        page = (page == null || page < 0) ? 0 : page;
+        size = (size == null || size < 1) ? 100 : size;
+        query.with(PageRequest.of(page, size));
 
-        cardRepository.saveAll(cards);
+        if (set != null && !set.isEmpty()) {
+            query.addCriteria(Criteria.where("set").is(set));
+        }
 
-        LOGGER.debug("[gatherCards] cards saves.");
+        if (name != null && !name.isEmpty()) {
+            query.addCriteria(Criteria.where("foreignNames_name").is(name));
+        }
 
+        return mongoTemplate.find(query, Card.class);
     }
 
-    /**
-     * Get cards in repository.
-     *
-     * @param page the page number.
-     * @param size the page size.
-     * @return the card @{@link Page}
-     */
-    Page<Card> getAllCard(@NotNull Integer page, @NotNull Integer size) {
+    public List<String> getCardsNames(String partialName, Lang lang) {
 
-        LOGGER.debug("[getAllCard] page {}, size {}.", page, size);
+        LOGGER.debug("[getCardsNames] partialName {}, lang {}", partialName, lang);
 
-        return cardRepository.findAll(PageRequest.of(page, size));
+        List<ForeignNames> foreignNames = new ArrayList<>();
+
+        if (lang != null) {
+            foreignNames = foreignNamesRepository.getForeignNamesByNameStartingWithIgnoreCaseAndLanguage(partialName, lang.getValue());
+            if (foreignNames.isEmpty()) {
+                foreignNames = foreignNamesRepository.getForeignNamesByNameContainingIgnoreCaseAndLanguage(partialName, lang.getValue());
+            }
+        }
+
+        if (foreignNames.isEmpty()) {
+            foreignNames = foreignNamesRepository.getForeignNamesByNameStartingWithIgnoreCase(partialName);
+            if (foreignNames.isEmpty()) {
+                foreignNames = foreignNamesRepository.getForeignNamesByNameContainingIgnoreCase(partialName);
+            }
+        }
+
+        return foreignNames.stream().map(ForeignNames::getName).distinct().collect(Collectors.toList());
     }
 
-    /**
-     * Get a list of name cards by given a partial name. Ignore case.
-     *
-     * @param partialName the partial name to find cards name.
-     * @return a @{@link List} of cards name.
-     */
-    List<String> getCardsName(String partialName) {
+    public Rarity getCardRarity(String cardName, Lang lang) {
 
-        List<Card> cards = cardRepository.getCardsByNameContainingIgnoreCase(partialName);
+        LOGGER.debug("[getCardRarity] cardName {}, lang {}", cardName, lang);
 
-        return cards.stream().map(Card::getName).distinct().collect(Collectors.toList());
-    }
+        List<Card> cards = new ArrayList<>();
 
-    /**
-     * Count the number of card in repository.
-     *
-     * @return count, the number of card in repository.
-     */
-    Long countCards() {
+        if (lang == null) {
+            cards.addAll(cardRepository.findCardsByForeignNames_Name(cardName));
+        } else {
+            cards.addAll(cardRepository.findCardsByForeignNames_NameAndForeignNames_Language(cardName, lang.getValue()));
+        }
 
-        long count = cardRepository.count();
+        if (cards.isEmpty()) throw new CardNotFoundException(cardName + ", not found for lang " + lang);
 
-        LOGGER.debug("[countCards] count {}.", count);
+        Rarity currentRarity = Rarity.MYTHIC;
 
-        return count;
+        for (Card card : cards) {
+            Rarity cardRarity = Rarity.fromStringRarity(card.getRarity());
+            if (cardRarity != null && cardRarity.isLowestThan(currentRarity)) {
+                currentRarity = cardRarity;
+            }
+        }
+        return currentRarity;
     }
 }

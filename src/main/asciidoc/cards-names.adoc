@@ -1,0 +1,26 @@
+=== /cards/names
+
+TODO General documentation for autocomplete cards name
+indiquer l'ordre de résolution de l'autocomplete
+start > contains
+
+==== Sample
+===== CURL
+include::{snippets}/cards-names/curl-request.adoc[]
+
+===== HTTP Request
+include::{snippets}/cards-names/http-request.adoc[]
+
+===== HTTP Response
+include::{snippets}/cards-names/http-response.adoc[]
+
+==== Parameters
+===== Request
+include::{snippets}/cards-names/request-parameters.adoc[]
+
+==== Response
+===== Body
+include::{snippets}/cards-names/response-body.adoc[]
+
+===== Fields
+include::{snippets}/cards-names/response-fields.adoc[]

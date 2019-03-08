@@ -1,0 +1,28 @@
+=== /cards/{cardName}/rarity
+
+TODO General documentation for card rarity.
+Add general documentation for "lang" for all api
+
+==== Sample
+===== CURL
+include::{snippets}/cards-rarity/curl-request.adoc[]
+
+===== HTTP Request
+include::{snippets}/cards-rarity/http-request.adoc[]
+
+===== HTTP Response
+include::{snippets}/cards-rarity/http-response.adoc[]
+
+==== Parameters
+===== Path
+include::{snippets}/cards-rarity/path-parameters.adoc[]
+
+===== Request
+include::{snippets}/cards-rarity/request-parameters.adoc[]
+
+==== Response
+===== Body
+include::{snippets}/cards-rarity/response-body.adoc[]
+
+===== Fields
+include::{snippets}/cards-rarity/response-fields.adoc[]

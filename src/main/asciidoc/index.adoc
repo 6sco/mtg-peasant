@@ -1,0 +1,18 @@
+= My REST API
+v{version}, MTG peasant team, {date}
+:doctype: book
+:docinfo: shared
+:icons: font
+:source-highlighter: highlightjs
+:highlightjs-theme: github
+:toc: left
+:toclevels: 2
+:sectlinks:
+:sectnums:
+
+This is an example output for a service running at http://localhost:8080/cards:
+
+include::cards.adoc[]
+include::cards-rarity.adoc[]
+include::cards-names.adoc[]
+

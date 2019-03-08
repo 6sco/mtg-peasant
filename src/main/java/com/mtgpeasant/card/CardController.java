@@ -1,13 +1,13 @@
 package com.mtgpeasant.card;
 
-import com.mtgpeasant.card.model.Card;
+import com.mtgpeasant.card.model.CardsNamesResponse;
+import com.mtgpeasant.card.model.CardsResponse;
+import com.mtgpeasant.card.model.Lang;
+import com.mtgpeasant.card.model.RarityResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/cards")
@@ -23,23 +23,31 @@ public class CardController {
     }
 
     @GetMapping(produces = "application/json")
-    public List<Card> getCards(@RequestParam(value = "page", required = false) Integer page,
-                               @RequestParam(value = "size", required = false) Integer size) {
+    public CardsResponse getCards(@RequestParam(value = "page", required = false) Integer page,
+                                  @RequestParam(value = "size", required = false) Integer size,
+                                  @RequestParam(value = "name", required = false) String name,
+                                  @RequestParam(value = "set", required = false) String set) {
 
         LOGGER.debug("[getCards] called.");
+        //TODO return page next link header
+        return new CardsResponse(cardService.getCards(page, size, name, set));
+    }
 
-        // Check params
-        page = (page == null) ? 0 : page;
-        size = (size == null) ? 100 : size;
+    @GetMapping(value = "/{cardName}/rarity", produces = "application/json")
+    public RarityResponse getCardRarity(@PathVariable(value = "cardName") String cardName,
+                                        @RequestParam(value = "lang", required = false) Lang lang) {
 
-        return cardService.getAllCard(page, size).getContent();
+        LOGGER.debug("[getCardRarity] cardName {}, lang {}.", cardName, lang);
+
+        return new RarityResponse(cardService.getCardRarity(cardName, lang));
     }
 
     @GetMapping(value = "/names", produces = "application/json")
-    public List<String> getCardsNameByPartialName(@RequestParam(value = "partialName") String partialName) {
+    public CardsNamesResponse getCardsNames(@RequestParam(value = "partialName") String partialName,
+                                            @RequestParam(value = "lang", required = false) Lang lang) {
 
-        LOGGER.debug("[getCardsByPartialName] partialName {}.", partialName);
+        LOGGER.debug("[getCardsNames] partialName {}, lang {}.", partialName, lang);
 
-        return cardService.getCardsName(partialName);
+        return new CardsNamesResponse(cardService.getCardsNames(partialName, lang));
     }
 }
