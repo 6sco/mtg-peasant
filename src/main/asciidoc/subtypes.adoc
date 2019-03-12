@@ -1,0 +1,20 @@
+=== /subtypes
+
+TODO General documentation for subtypes.
+
+==== Sample
+===== CURL
+include::{snippets}/subtypes/curl-request.adoc[]
+
+===== HTTP Request
+include::{snippets}/subtypes/http-request.adoc[]
+
+===== HTTP Response
+include::{snippets}/subtypes/http-response.adoc[]
+
+==== Response
+===== Body
+include::{snippets}/subtypes/response-body.adoc[]
+
+===== Fields
+include::{snippets}/subtypes/response-fields.adoc[]

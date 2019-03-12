@@ -1,4 +1,4 @@
-package com.mtgpeasant.card.model.magicthegatheringIo;
+package com.mtgpeasant.gather.model;
 
 import lombok.*;
 

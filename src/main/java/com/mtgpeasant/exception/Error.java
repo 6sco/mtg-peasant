@@ -1,4 +1,4 @@
-package com.mtgpeasant.card.Exception;
+package com.mtgpeasant.exception;
 
 import lombok.*;
 

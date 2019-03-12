@@ -1,6 +1,6 @@
 package com.mtgpeasant.card.model;
 
-import com.mtgpeasant.card.model.magicthegatheringIo.Card;
+import com.mtgpeasant.gather.model.Card;
 import lombok.*;
 
 import java.util.List;

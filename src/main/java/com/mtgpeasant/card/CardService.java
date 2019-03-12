@@ -1,10 +1,12 @@
 package com.mtgpeasant.card;
 
-import com.mtgpeasant.card.Exception.CardNotFoundException;
 import com.mtgpeasant.card.model.Lang;
 import com.mtgpeasant.card.model.Rarity;
-import com.mtgpeasant.card.model.magicthegatheringIo.Card;
-import com.mtgpeasant.card.model.magicthegatheringIo.ForeignNames;
+import com.mtgpeasant.exception.CardNotFoundException;
+import com.mtgpeasant.gather.model.Card;
+import com.mtgpeasant.gather.model.ForeignNames;
+import com.mtgpeasant.gather.repository.CardRepository;
+import com.mtgpeasant.gather.repository.ForeignNamesRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

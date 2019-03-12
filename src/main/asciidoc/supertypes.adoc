@@ -1,0 +1,20 @@
+=== /supertypes
+
+TODO General documentation for supertypes.
+
+==== Sample
+===== CURL
+include::{snippets}/supertypes/curl-request.adoc[]
+
+===== HTTP Request
+include::{snippets}/supertypes/http-request.adoc[]
+
+===== HTTP Response
+include::{snippets}/supertypes/http-response.adoc[]
+
+==== Response
+===== Body
+include::{snippets}/supertypes/response-body.adoc[]
+
+===== Fields
+include::{snippets}/supertypes/response-fields.adoc[]

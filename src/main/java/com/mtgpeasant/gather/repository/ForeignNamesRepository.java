@@ -1,6 +1,6 @@
-package com.mtgpeasant.card;
+package com.mtgpeasant.gather.repository;
 
-import com.mtgpeasant.card.model.magicthegatheringIo.ForeignNames;
+import com.mtgpeasant.gather.model.ForeignNames;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

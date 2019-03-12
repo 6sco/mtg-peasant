@@ -1,6 +1,6 @@
 package com.mtgpeasant.configuration;
 
-import com.mtgpeasant.card.CardGatherJob;
+import com.mtgpeasant.gather.DataGatherJob;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -18,30 +18,30 @@ public class QuartzConfiguration {
     private String triggerAtBootName;
 
     @Value("${trigger.every.week.name}")
-    private String triggerEveryDayName;
+    private String triggerEveryWeekName;
 
     @Bean
-    public JobDetail gatherCardJob() {
-        return JobBuilder.newJob().ofType(CardGatherJob.class)
+    public JobDetail gatherDataJob() {
+        return JobBuilder.newJob().ofType(DataGatherJob.class)
                 .storeDurably()
-                .withIdentity("gatherCardJob")
-                .withDescription("Invoke gather card job.").build();
+                .withIdentity("gatherDataJob")
+                .withDescription("Invoke gather data job.").build();
     }
 
     @Bean
-    public Trigger gatherCardJobTriggerAtBoot(JobDetail gatherCardJob) {
-        return TriggerBuilder.newTrigger().forJob(gatherCardJob)
+    public Trigger gatherDataJobTriggerAtBoot(JobDetail gatherDataJob) {
+        return TriggerBuilder.newTrigger().forJob(gatherDataJob)
                 .withIdentity(triggerAtBootName).startNow().build();
     }
 
     @Bean
-    public Trigger gatherCardJobTriggerEveryDay(JobDetail gatherCardJob) {
+    public Trigger gatherDataJobTriggerEveryWeek(JobDetail gatherDataJob) {
 
         SimpleScheduleBuilder scheduleBuilder = SimpleScheduleBuilder.simpleSchedule()
                 .withIntervalInHours(gatherRepeatIntervalInWeek * 7 * 24).repeatForever();
 
-        return TriggerBuilder.newTrigger().forJob(gatherCardJob)
-                .withIdentity(triggerEveryDayName).startAt(futureDate(gatherRepeatIntervalInWeek, DateBuilder
+        return TriggerBuilder.newTrigger().forJob(gatherDataJob)
+                .withIdentity(triggerEveryWeekName).startAt(futureDate(gatherRepeatIntervalInWeek, DateBuilder
                         .IntervalUnit.WEEK)).withSchedule(scheduleBuilder).build();
     }
 }

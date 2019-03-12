@@ -1,0 +1,20 @@
+=== /types
+
+TODO General documentation for types.
+
+==== Sample
+===== CURL
+include::{snippets}/types/curl-request.adoc[]
+
+===== HTTP Request
+include::{snippets}/types/http-request.adoc[]
+
+===== HTTP Response
+include::{snippets}/types/http-response.adoc[]
+
+==== Response
+===== Body
+include::{snippets}/types/response-body.adoc[]
+
+===== Fields
+include::{snippets}/types/response-fields.adoc[]

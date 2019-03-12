@@ -15,4 +15,8 @@ This is an example output for a service running at http://localhost:8080/cards:
 include::cards.adoc[]
 include::cards-rarity.adoc[]
 include::cards-names.adoc[]
+include::sets.adoc[]
+include::types.adoc[]
+include::subtypes.adoc[]
+include::supertypes.adoc[]
 

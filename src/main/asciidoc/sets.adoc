@@ -1,0 +1,24 @@
+=== /sets
+
+TODO General documentation for sets.
+
+==== Sample
+===== CURL
+include::{snippets}/sets/curl-request.adoc[]
+
+===== HTTP Request
+include::{snippets}/sets/http-request.adoc[]
+
+===== HTTP Response
+include::{snippets}/sets/http-response.adoc[]
+
+==== Parameters
+===== Request
+include::{snippets}/sets/request-parameters.adoc[]
+
+==== Response
+===== Body
+include::{snippets}/sets/response-body.adoc[]
+
+===== Fields
+include::{snippets}/sets/response-fields.adoc[]

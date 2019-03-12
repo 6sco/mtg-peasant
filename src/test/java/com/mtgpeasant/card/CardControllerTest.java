@@ -3,7 +3,7 @@ package com.mtgpeasant.card;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mtgpeasant.card.model.Lang;
 import com.mtgpeasant.card.model.Rarity;
-import com.mtgpeasant.card.model.magicthegatheringIo.Card;
+import com.mtgpeasant.gather.model.Card;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,11 +36,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureRestDocs
 public class CardControllerTest {
 
-    ObjectMapper objectMapper;
+    private ObjectMapper objectMapper;
+
     @Autowired
     private MockMvc mockMvc;
+
     @MockBean
     private CardService cardService;
+
     @InjectMocks
     @Autowired
     private CardController cardController;
